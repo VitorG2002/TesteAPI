@@ -73,7 +73,7 @@ namespace TesteAPI.Controllers
         {
             try
             {
-                var result = await _services.Autenticar(code);
+                var result = await _services.AutenticarNuvemshop(code);
                 return Ok(result);
             }
             catch(Exception ex)

@@ -34,6 +34,10 @@ namespace TesteAPI.Services
         private string pastaDestinoJsonNuvemShop = "";
         private string nomeArquivoLogNuvemShop = "NUVEMSHOP";
         private string strIdentificadorServicoUsuario3 = "NUVEM_SHOP_(COD_SERV={0})(COD_USUARIO={1})";
+        //Separação
+        private string pastaDestinoJsonPedidoML = "";
+        private string nomeArquivoLogML = "MERCADOLIVRE";
+        private string strIdentificadorServicoUsuario4 = "MERCADO_LIVRE_(COD_SERV={0})(COD_USUARIO={1})";
         JavaScriptSerializer serializer = new JavaScriptSerializer();
         private readonly IConfiguration _configuration;
 
@@ -45,34 +49,14 @@ namespace TesteAPI.Services
             pastaDestinoJsonShoppub = _configuration.GetValue<string>("pastaShoppubWebhook");
             pastaDestinoJsonBling = _configuration.GetValue<string>("pastaBlingWebhook");
             pastaDestinoJsonNuvemShop = _configuration.GetValue<string>("pastaNuvemshopWebhook");
+            pastaDestinoJsonPedidoML = _configuration.GetValue<string>("pastaPedidoML");
         }
 
-        public async Task<T> CapturarTokenServicos<T>(string _token, int tipoIntegracao) where T : new()
+        public async Task<T> BuscarIntegracao<T>(string _token, int tipoIntegracao) where T : new()
         {
             T servico1 = new T();
             try
             {
-                //using (_context)
-                //{
-                //    var servico = await _context.Database.SqlQuery<T>($@"select 
-                //                                                                            s.codigo,
-                //                                                                            s.fk_servico,
-                //                                                                            s.descricao,
-                //                                                                            e.nome_fantasia,
-                //                                                                            e.cnpj_cpf,
-                //                                                                            s.integracao_api_key,
-                //                                                                            s.integracao_id,
-                //                                                                            s.integracao_tipo,
-                //                                                                            s.integracao_nome_transportadora,
-                //                                                                            s.integracao_url,
-                //                                                                            coalesce(s.integracao_importar_sem_nf, false) as integracao_importar_sem_nf
-                //                                                                        from
-                //                                                                            cl_integracoes s
-                //                                                                            inner join cl_empresas e on e.codigo = s.fk_empresa
-                //                                                                        where
-                //                                                                            s.integracao_api_key='{_token}' and s.integracao_tipo= {tipoIntegracao}").FirstOrDefaultAsync();
-                //    servico1 = servico;
-                //}
 
             }
             catch (Exception ex)
@@ -83,41 +67,39 @@ namespace TesteAPI.Services
             return servico1;
         }
 
-        public async Task<T> CapturarTokenServicos<T>(string api_key, string consumer_secret, int tipoIntegracao) where T : new()
-        {
-            T servico1 = new T();
-            //try
-            //{
-            //    using (RadarDataContext db = new RadarDataContext())
-            //    {
-            //        var servico = await db.Database.SqlQuery<T>($@"select 
-            //                                                                                s.codigo,
-            //                                                                                s.fk_servico,
-            //                                                                                s.descricao,
-            //                                                                                e.nome_fantasia,
-            //                                                                                e.cnpj_cpf,
-            //                                                                                s.integracao_api_key,
-            //                                                                                s.integracao_id,
-            //                                                                                s.integracao_tipo,
-            //                                                                                s.integracao_nome_transportadora,
-            //                                                                                s.integracao_url,
-            //                                                                                coalesce(s.integracao_importar_sem_nf, false) as integracao_importar_sem_nf
-            //                                                                            from
-            //                                                                                cl_integracoes s
-            //                                                                                inner join cl_empresas e on e.codigo = s.fk_empresa
-            //                                                                            where
-            //                                                                                s.integracao_api_key='{_token}' and s.integracao_tipo=" + (int)Tipos.TiposIntegracoes.Shoppub).FirstOrDefaultAsync();
-            //        servico1 = servico;
-            //    }
+        //public async Task<ReadIntegracaoDto> BuscarIntegracao(string codigoIntegracao, int integracaoTipo)
+        //{
+        //    try
+        //    {
+        //        var servico = await (from integracao in _context.Integracoes
+        //                             where integracao.IntegracaoTipo.Equals(integracaoTipo)
+        //                             && integracao.Codigo.ToString().Equals(codigoIntegracao)
+        //                             join empresa in _context.Empresas on integracao.FkEmpresa equals empresa.Codigo
+        //                             select new ReadIntegracaoDto
+        //                             {
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine("Erro ao buscar o serviço, Token do Serviço: " + _token, nomeArquivoLogShoppubWebHook, ex);
-            //}
-
-            return servico1;
-        }
+        //                                 Codigo = integracao.Codigo,
+        //                                 Descricao = integracao.Descricao,
+        //                                 NomeFantasia = empresa.NomeFantasia,
+        //                                 CnpjCpf = empresa.CnpjCpf,
+        //                                 IntegracaoTipo = integracao.IntegracaoTipo,
+        //                                 IntegracaoUrl = integracao.IntegracaoUrl,
+        //                                 IntegracaoApiKey = integracao.IntegracaoApiKey,
+        //                                 IntegracaoId = integracao.IntegracaoId,
+        //                                 IntegracaoIdTransportadora = integracao.IntegracaoIdTransportadora,
+        //                                 IntegracaoNomeTransportadora = integracao.IntegracaoNomeTransportadora,
+        //                                 IntegracaoToken = integracao.IntegracaoToken,
+        //                                 IntegracaoImportarSemNf = integracao.IntegracaoImportarSemNf,
+        //                                 Servico = integracao.Servico.Descricao,
+        //                                 FkServico = integracao.FkServico
+        //                             }).OrderBy(i => i.Descricao).AsNoTracking().FirstOrDefaultAsync();
+        //        return servico;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return null;
+        //    }
+        //}
 
         public async Task<bool> GravarArquivoJson<T, S>(T pedido, S servico, string pastaDestino, string strIdServicoUsuario, string nomeArquivoLog)
         {
@@ -722,7 +704,7 @@ namespace TesteAPI.Services
             }
         }
 
-        public async Task<string> Autenticar(string code)
+        public async Task<string> AutenticarNuvemshop(string code)
         {
             try
             {
@@ -817,6 +799,149 @@ namespace TesteAPI.Services
         //        throw new Exception(ex.Message);
         //    }
         //}
+
+        #endregion
+
+        #region MLWebhook
+
+        public async Task<IntegracaoML> BuscarIntegracaoML()
+        {
+            IntegracaoML servico = new IntegracaoML
+            {
+                Codigo = 123,
+                Descricao = "TesteEnglobaWebhook",
+                Integracao_nome_transportadora = "A combinar",
+                Integracao_id = "1257310157",
+                Integracao_token = "6665719629768278",
+                Integracao_api_key = "APP_USR-6665719629768278-120714-468aa478bff8126199fc95b093a41778-1257310157",
+                Integracao_importar_sem_nf = true,
+                FK_servico = 4716
+
+                //Quando for buscar pelo banco de dados tem que pegar a integracao que tem o campo integracao_id igual o storeId passado pelo webhook
+                //Também tem que comparar o tipo da integracao, que é uma constante que vai ser passado na chamada do método.
+            };
+
+            return servico;
+        }
+
+        public async Task<bool> SalvarPedidoML(WebhookML pedidoWebhook)
+        {
+            
+            var integracao = await BuscarIntegracaoML();
+
+            if (integracao == null)
+            {
+                Console.WriteLine("Erro ao buscar o serviço", nomeArquivoLogML, null);
+                return false;
+            }
+
+            try
+            {
+                return await BuscarPedidoML(pedidoWebhook, integracao);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao buscar o pedido, id do pedido: " + pedidoWebhook.Resource + " Serviço utilizado: " + integracao.Descricao, nomeArquivoLogML, ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> BuscarPedidoML(WebhookML pedidoWebhook, IntegracaoML integracao)
+        {
+            using (var httpCliente = new HttpClient())
+            {
+                httpCliente.DefaultRequestHeaders.Add("Authorization", $"Bearer {integracao.Integracao_api_key}");
+                //httpCliente.DefaultRequestHeaders.Add("User-Agent", $"{integracao.Descricao} ({integracao.Integracao_id})");
+                ServicePointManager.Expect100Continue = true;
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                HttpResponseMessage response = null;
+                httpCliente.Timeout = new TimeSpan(0, 0, 60);
+                string url = $"https://api.mercadolibre.com{pedidoWebhook.Resource}";
+                response = await httpCliente.GetAsync(new Uri(url));
+                var jsonRetorno = await response.Content.ReadAsStringAsync();
+
+                if ((jsonRetorno != null) && (response.IsSuccessStatusCode))
+                {
+                    OrderML dadosRetorno = JsonConvert.DeserializeObject<OrderML>(jsonRetorno);
+
+                    //var pedidoValido = await ValidarPedidoNuvemShop(dadosRetorno, integracao);
+
+                    //if (!pedidoValido)
+                    //{
+                    //    Console.WriteLine("Erro ao validar o pedido, verifique se os campos AppId, PromotionalDiscount.StoreId e ShippingOption estão corretos", nomeArquivoLogNuvemShop);
+                    //    return false;
+                    //}
+
+                    try
+                    {
+                        return await GravarArquivoJson(dadosRetorno, integracao, pastaDestinoJsonPedidoML, strIdentificadorServicoUsuario4, nomeArquivoLogML);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Erro ao salvar o pedido - NuvemShop Webhook: ", nomeArquivoLogML, ex);
+                        return false;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Erro ao buscar o pedido, id do pedido: " + pedidoWebhook.Resource + " Serviço utilizado: " + integracao.Descricao, nomeArquivoLogML, null);
+                    return false;
+                }
+            }
+        }
+
+        public async Task<string> AutenticarML(string code)
+        {
+            try
+            {
+                using (var httpCliente = new HttpClient())
+                {
+                    var values = new Dictionary<string, string>
+                {
+                    { "grant_type", "authorization_code"},
+                    { "client_id", "6665719629768278" },
+                    { "client_secret", "IuJH7tefiu2TUhrkGeatZZBWg2i7cgo4" },
+                    { "code", code},
+                    {"redirect_uri","https://testeengloba.requestcatcher.com/test" }
+                };
+
+                    var json = JsonConvert.SerializeObject(values);
+                    var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    string contentType = "application/json";
+                    httpCliente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+                    //httpCliente.DefaultRequestHeaders.Add("User-Agent", "Teste Engloba (5730)");
+
+                    ServicePointManager.Expect100Continue = true;
+                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                    HttpResponseMessage response = null;
+                    httpCliente.Timeout = new TimeSpan(0, 0, 60);
+                    response = await httpCliente.PostAsync(new Uri($"https://api.mercadolibre.com/oauth/token"), data);
+                    var jsonRetorno = await response.Content.ReadAsStringAsync();
+
+                    if ((jsonRetorno != null) && response.IsSuccessStatusCode && !jsonRetorno.Contains("error"))
+                    {
+                        var objetoRetorno = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonRetorno);
+                        string? storeId, accessToken, refreshToken;
+                        objetoRetorno.TryGetValue("user_id", out storeId);
+                        objetoRetorno.TryGetValue("access_token", out accessToken);
+                        objetoRetorno.TryGetValue("refresh_token", out refreshToken);
+                        Console.WriteLine("StoreId: " + storeId + "\n" + "AccessToken: " + accessToken + "\n" + "RefreshToken: " + refreshToken);
+
+                        return "StoreId: " + storeId + "\n" + "AccessToken: " + accessToken + "\n" + "RefreshToken: " + refreshToken;
+
+                    }
+                    else
+                    {
+                        throw new Exception("Houve um erro na autenticação!");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         #endregion
 

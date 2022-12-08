@@ -12,10 +12,9 @@ namespace TesteAPI
         public Task<bool> GetPedidoShoppubWebhook(PedidoShoppubWebhook pedido, string token);
         public Task<string> GetBlingNotaFiscal(BlingPedidos dadosPedido, string codigoServico, string apiKey);
         public Task<bool> SalvarPedidoNuvemShop(NuvemShopWebhook pedidoWebhook);
-        //public Task<object> CapturarTokenServicos();
-        //public Task<bool> MandaRequisicao(WooCommercePedido? pedido, WooCommerceServicosIntegrar? servico, PedidoShoppub? pedidoShoppub);
-        public Task<T> CapturarTokenServicos<T>(string token, int  integracaoTipo) where T : new();
-
-        public Task<string> Autenticar(string code);
+        public  Task<bool> SalvarPedidoML(WebhookML pedido);
+        public Task<T> BuscarIntegracao<T>(string token, int  integracaoTipo) where T : new();
+        public Task<string> AutenticarML(string code);
+        public Task<string> AutenticarNuvemshop(string code);
     }
 }
