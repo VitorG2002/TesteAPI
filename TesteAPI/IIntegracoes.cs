@@ -16,5 +16,6 @@ namespace TesteAPI
         public Task<T> BuscarIntegracao<T>(string token, int  integracaoTipo) where T : new();
         public Task<string> AutenticarML(string code);
         public Task<string> AutenticarNuvemshop(string code);
+        public  Task<NuvemShopLoja> CriarLojaNuvemShop(string token, string idLoja);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Xml.Linq;
 
 namespace TesteAPI.Models
 {
@@ -32,6 +33,159 @@ namespace TesteAPI.Models
         public int? Cont_url_next { get; set; }
         public bool? Cliente_sincronizado { get; set; }
     }
+
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    public class Description
+    {
+        [JsonProperty("pt")]
+        public object Pt { get; set; }
+    }
+
+    public class En
+    {
+        [JsonProperty("currency")]
+        public string Currency { get; set; }
+
+        [JsonProperty("active")]
+        public bool Active { get; set; }
+    }
+
+    public class Es
+    {
+        [JsonProperty("currency")]
+        public string Currency { get; set; }
+
+        [JsonProperty("active")]
+        public bool Active { get; set; }
+    }
+
+    public class Languages
+    {
+        [JsonProperty("es")]
+        public Es Es { get; set; }
+
+        [JsonProperty("pt")]
+        public Pt Pt { get; set; }
+
+        [JsonProperty("en")]
+        public En En { get; set; }
+    }
+
+    public class Name
+    {
+        [JsonProperty("pt")]
+        public string Pt { get; set; }
+    }
+
+    public class Pt
+    {
+        [JsonProperty("currency")]
+        public string Currency { get; set; }
+
+        [JsonProperty("active")]
+        public bool Active { get; set; }
+    }
+
+    public class NuvemShopLoja
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
+        [JsonProperty("name")]
+        public Name Name { get; set; }
+
+        [JsonProperty("description")]
+        public Description Description { get; set; }
+
+        [JsonProperty("type")]
+        public object Type { get; set; }
+
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
+        [JsonProperty("logo")]
+        public object Logo { get; set; }
+
+        [JsonProperty("contact_email")]
+        public object ContactEmail { get; set; }
+
+        [JsonProperty("country")]
+        public string Country { get; set; }
+
+        [JsonProperty("facebook")]
+        public object Facebook { get; set; }
+
+        [JsonProperty("twitter")]
+        public string Twitter { get; set; }
+
+        [JsonProperty("instagram")]
+        public string Instagram { get; set; }
+
+        [JsonProperty("pinterest")]
+        public object Pinterest { get; set; }
+
+        [JsonProperty("blog")]
+        public object Blog { get; set; }
+
+        [JsonProperty("business_id")]
+        public object BusinessId { get; set; }
+
+        [JsonProperty("business_name")]
+        public object BusinessName { get; set; }
+
+        [JsonProperty("business_address")]
+        public object BusinessAddress { get; set; }
+
+        [JsonProperty("address")]
+        public object Address { get; set; }
+
+        [JsonProperty("phone")]
+        public object Phone { get; set; }
+
+        [JsonProperty("customer_accounts")]
+        public string CustomerAccounts { get; set; }
+
+        [JsonProperty("plan_name")]
+        public string PlanName { get; set; }
+
+        [JsonProperty("domains")]
+        public List<object> Domains { get; set; }
+
+        [JsonProperty("languages")]
+        public Languages Languages { get; set; }
+
+        [JsonProperty("original_domain")]
+        public string OriginalDomain { get; set; }
+
+        [JsonProperty("url_with_protocol")]
+        public string UrlWithProtocol { get; set; }
+
+        [JsonProperty("main_currency")]
+        public string MainCurrency { get; set; }
+
+        [JsonProperty("current_theme")]
+        public string CurrentTheme { get; set; }
+
+        [JsonProperty("main_language")]
+        public string MainLanguage { get; set; }
+
+        [JsonProperty("admin_language")]
+        public string AdminLanguage { get; set; }
+
+        [JsonProperty("created_at")]
+        public DateTime CreatedAt { get; set; }
+
+        [JsonProperty("updated_at")]
+        public DateTime UpdatedAt { get; set; }
+        public string? AccessToken { get; set; }
+        public string? idNuvemShop { get; set; }
+        public string? Nome { get; set; }
+        public string? RazaoSocial { get; set; }    
+        public string? Telefone { get; set; }
+        public string? Cnpj { get; set; }
+    }
+
+
 
     public class NuvemShopAddress
     {

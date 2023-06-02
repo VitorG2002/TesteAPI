@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nancy.Json;
 using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections;
 using System.Linq;
@@ -17,7 +18,6 @@ namespace TesteAPI.Services
 
     public class IntegracoesServices : IIntegracoes
     {
-        //private readonly RadarDataContext _context;
         private Hashtable htPedidosProcessados = new Hashtable();
         private string nomeArquivoLogWooCommerceWebHook = "WOOCOMMERCE_WEBHOOK";
         private string strIdentificadorServicoUsuario = "WOOCOMMERCE_WEBHOOK_(COD_SERV={0})(COD_USUARIO={1})";
@@ -66,40 +66,6 @@ namespace TesteAPI.Services
 
             return servico1;
         }
-
-        //public async Task<ReadIntegracaoDto> BuscarIntegracao(string codigoIntegracao, int integracaoTipo)
-        //{
-        //    try
-        //    {
-        //        var servico = await (from integracao in _context.Integracoes
-        //                             where integracao.IntegracaoTipo.Equals(integracaoTipo)
-        //                             && integracao.Codigo.ToString().Equals(codigoIntegracao)
-        //                             join empresa in _context.Empresas on integracao.FkEmpresa equals empresa.Codigo
-        //                             select new ReadIntegracaoDto
-        //                             {
-
-        //                                 Codigo = integracao.Codigo,
-        //                                 Descricao = integracao.Descricao,
-        //                                 NomeFantasia = empresa.NomeFantasia,
-        //                                 CnpjCpf = empresa.CnpjCpf,
-        //                                 IntegracaoTipo = integracao.IntegracaoTipo,
-        //                                 IntegracaoUrl = integracao.IntegracaoUrl,
-        //                                 IntegracaoApiKey = integracao.IntegracaoApiKey,
-        //                                 IntegracaoId = integracao.IntegracaoId,
-        //                                 IntegracaoIdTransportadora = integracao.IntegracaoIdTransportadora,
-        //                                 IntegracaoNomeTransportadora = integracao.IntegracaoNomeTransportadora,
-        //                                 IntegracaoToken = integracao.IntegracaoToken,
-        //                                 IntegracaoImportarSemNf = integracao.IntegracaoImportarSemNf,
-        //                                 Servico = integracao.Servico.Descricao,
-        //                                 FkServico = integracao.FkServico
-        //                             }).OrderBy(i => i.Descricao).AsNoTracking().FirstOrDefaultAsync();
-        //        return servico;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return null;
-        //    }
-        //}
 
         public async Task<bool> GravarArquivoJson<T, S>(T pedido, S servico, string pastaDestino, string strIdServicoUsuario, string nomeArquivoLog)
         {
@@ -595,13 +561,13 @@ namespace TesteAPI.Services
                 Codigo = 123,
                 Descricao = "TesteEnglobaWebhook",
                 Integracao_nome_transportadora = "Correios - PAC",
-                Integracao_id = "5730",
-                Integracao_token = "2597928",
+                Integracao_id = "2597928",
+                Integracao_token = "5730",
                 Integracao_api_key = "4d13edba0022fa9704a3ab205a30b5d53bc0ae5d",
                 Integracao_importar_sem_nf = false,
                 FK_servico = 4716
 
-                //Quando for buscar pelo banco de dados tem que pegar a integracao que tem o campo integracao_id igual o storeId passado pelo webhook
+                //Quando for buscar pelo banco de dados tem que pegar a integracao que tem o campo integracao_tpken igual o storeId passado pelo webhook
                 //Também tem que comparar o tipo da integracao, que é uma constante que vai ser passado na chamada do método.
             };
 
@@ -627,15 +593,10 @@ namespace TesteAPI.Services
                                         return true;
                                     }
                                 }
-                                return false;
                             }
-                            return false;
                         }
-                        return false;
                     }
-                    return false;
                 }
-                return false;
             }
             return false;
         }
@@ -665,12 +626,12 @@ namespace TesteAPI.Services
             using (var httpCliente = new HttpClient())
             {
                 httpCliente.DefaultRequestHeaders.Add("Authentication", $"bearer {servico.Integracao_api_key}");
-                httpCliente.DefaultRequestHeaders.Add("User-Agent", $"{servico.Descricao} ({servico.Integracao_id})");
+                httpCliente.DefaultRequestHeaders.Add("User-Agent", $"TesteEngloba (5730)");
                 ServicePointManager.Expect100Continue = true;
                 System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
                 HttpResponseMessage response = null;
                 httpCliente.Timeout = new TimeSpan(0, 0, 60);
-                string url = $"https://api.nuvemshop.com.br/v1/{servico.Integracao_token}/orders/{pedido.Id}";
+                string url = $"https://api.nuvemshop.com.br/v1/{servico.Integracao_id}/orders/{pedido.Id}";
                 response = await httpCliente.GetAsync(new Uri(url));
                 var jsonRetorno = await response.Content.ReadAsStringAsync();
 
@@ -711,12 +672,12 @@ namespace TesteAPI.Services
                 using (var httpCliente = new HttpClient())
                 {
                     var values = new Dictionary<string, string>
-                {
-                    { "client_id", "5730" },
-                    { "client_secret", "68abe745b2eceb13318a6a6b507afb1c3005140098c3bd7b" },
-                    { "grant_type", "authorization_code"},
-                    { "code", code}
-                };
+                    {
+                        { "client_id", "5730" },
+                        { "client_secret", "68abe745b2eceb13318a6a6b507afb1c3005140098c3bd7b" },
+                        { "grant_type", "authorization_code"},
+                        { "code", code}
+                    };
 
                     var json = JsonConvert.SerializeObject(values);
                     var data = new StringContent(json, Encoding.UTF8, "application/json");
@@ -740,7 +701,7 @@ namespace TesteAPI.Services
                         objetoRetorno.TryGetValue("access_token", out accessToken);
                         Console.WriteLine(storeId + "\n" + accessToken);
 
-                        return "StoreId: " + storeId + "\n" + " AcessToken: " + accessToken;
+                        return "StoreId: " + storeId + "\n" + " AccessToken: " + accessToken;
 
                     }
                     else
@@ -754,6 +715,42 @@ namespace TesteAPI.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<NuvemShopLoja> CriarLojaNuvemShop (string token, string idLoja)
+        {
+            try
+            {
+                using (var httpCliente = new HttpClient())
+                {
+                    httpCliente.DefaultRequestHeaders.Add("Authentication", $"bearer {token}");
+                    httpCliente.DefaultRequestHeaders.Add("User-Agent", "TesteEngloba (5730)");
+
+                    ServicePointManager.Expect100Continue = true;
+                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                    HttpResponseMessage response = null;
+                    httpCliente.Timeout = new TimeSpan(0, 0, 60);
+                    response = await httpCliente.GetAsync(new Uri($"https://api.nuvemshop.com.br/v1/{idLoja}/store"));
+                    var jsonRetorno = await response.Content.ReadAsStringAsync();
+
+                    if ((jsonRetorno != null) && response.IsSuccessStatusCode && !jsonRetorno.Contains("error"))
+                    {
+                        var lojaNumvemShop = JsonConvert.DeserializeObject<NuvemShopLoja>(jsonRetorno);
+                        lojaNumvemShop.AccessToken = token;
+                        lojaNumvemShop.idNuvemShop = idLoja;
+                        return lojaNumvemShop;
+                    }
+                    else
+                    {
+                        throw new Exception("Houve um erro na autenticação!");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
 
         //    public async Task<bool> DeleteStoreNuvemShop(int codigo)
         //    {
@@ -815,7 +812,7 @@ namespace TesteAPI.Services
                 Integracao_token = "6665719629768278",
                 Integracao_api_key = "APP_USR-6665719629768278-120714-468aa478bff8126199fc95b093a41778-1257310157",
                 Integracao_importar_sem_nf = true,
-                FK_servico = 4716
+                Fk_servico = 4716
 
                 //Quando for buscar pelo banco de dados tem que pegar a integracao que tem o campo integracao_id igual o storeId passado pelo webhook
                 //Também tem que comparar o tipo da integracao, que é uma constante que vai ser passado na chamada do método.

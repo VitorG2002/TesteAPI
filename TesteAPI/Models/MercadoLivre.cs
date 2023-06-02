@@ -398,7 +398,7 @@ namespace TesteAPI.Models
     public class IntegracaoML
     {
         public int? Codigo { get; set; }
-        public int? FK_servico { get; set; }
+        public int? Fk_servico { get; set; }
         public int? FK_empresa { get; set; }
         public string? Descricao { get; set; }
         public string? Nome_fantasia { get; set; }

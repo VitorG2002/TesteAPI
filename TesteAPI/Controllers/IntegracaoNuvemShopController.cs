@@ -83,6 +83,21 @@ namespace TesteAPI.Controllers
             }
         }
 
+        [HttpPost(("GeraLoja"))]
+        public async Task<IActionResult> GeraLoja(string token, string idLoja)
+        {
+            try
+            {
+                var result = await _services.CriarLojaNuvemShop(token, idLoja);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message, null, ex, "IntegracaoNuvemShopController", "GeraToken");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpDelete("{codigo}")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
